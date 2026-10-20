@@ -6,7 +6,8 @@
 
   var origin = new URL(script.src).origin;
   var iframe = document.createElement("iframe");
-  iframe.src = origin + "/widget/" + encodeURIComponent(spaceId);
+  var theme = script.getAttribute("data-theme") === "dark" ? "?theme=dark" : "";
+  iframe.src = origin + "/widget/" + encodeURIComponent(spaceId) + theme;
   iframe.title = "Testimonials";
   iframe.loading = "lazy";
   iframe.style.cssText = "width:100%;border:0;display:block;min-height:200px;";

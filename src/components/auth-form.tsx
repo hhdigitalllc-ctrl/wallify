@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import type { AuthState } from "@/app/auth/actions";
+import { Logo } from "@/components/logo";
 
 type Props = {
   mode: "login" | "signup";
@@ -14,11 +15,22 @@ export function AuthForm({ mode, action }: Props) {
   const isLogin = mode === "login";
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
-      <form action={formAction} className="w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {isLogin ? "Welcome back" : "Create your account"}
-        </h1>
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[-200px] h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-accent/15 blur-3xl"
+      />
+      <div className="relative mb-8">
+        <Logo />
+      </div>
+
+      <form action={formAction} className="card relative w-full max-w-sm space-y-4 p-7">
+        <div>
+          <h1 className="display text-3xl">{isLogin ? "Welcome back" : "Create your account"}</h1>
+          <p className="mt-1 text-sm text-muted">
+            {isLogin ? "Log in to manage your testimonials." : "Start collecting social proof in minutes."}
+          </p>
+        </div>
 
         <input
           name="email"
@@ -26,31 +38,32 @@ export function AuthForm({ mode, action }: Props) {
           placeholder="you@example.com"
           autoComplete="email"
           required
-          className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-900"
+          className="input"
         />
         <input
           name="password"
           type="password"
-          placeholder="Password"
+          placeholder={isLogin ? "Password" : "Password (8+ characters)"}
           autoComplete={isLogin ? "current-password" : "new-password"}
           minLength={isLogin ? undefined : 8}
           required
-          className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-900"
+          className="input"
         />
 
-        {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
-        {state?.message && <p className="text-sm text-green-700">{state.message}</p>}
+        {state?.error && (
+          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>
+        )}
+        {state?.message && (
+          <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{state.message}</p>
+        )}
 
-        <button
-          disabled={pending}
-          className="w-full rounded-lg bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
-        >
+        <button disabled={pending} className="btn-primary w-full">
           {pending ? "Please wait…" : isLogin ? "Log in" : "Sign up"}
         </button>
 
-        <p className="text-sm text-neutral-500">
+        <p className="text-center text-sm text-muted">
           {isLogin ? "No account yet? " : "Already have an account? "}
-          <Link href={isLogin ? "/signup" : "/login"} className="text-neutral-900 underline">
+          <Link href={isLogin ? "/signup" : "/login"} className="font-medium text-accent-ink hover:underline">
             {isLogin ? "Sign up" : "Log in"}
           </Link>
         </p>

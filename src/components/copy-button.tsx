@@ -16,12 +16,8 @@ export function CopyButton({ text, label }: { text: string; label: string }) {
   }
 
   return (
-    <button
-      type="button"
-      onClick={copy}
-      className="rounded-md border border-neutral-300 px-2.5 py-1 text-xs font-medium hover:bg-neutral-100"
-    >
-      {copied ? "Copied!" : label}
+    <button type="button" onClick={copy} className="btn-ghost btn-sm">
+      {copied ? "✓ Copied" : label}
     </button>
   );
 }
