@@ -2,11 +2,13 @@
 
 import { useActionState, useState } from "react";
 import { submitTestimonial } from "@/app/[locale]/collect/[slug]/actions";
-import type { Locale } from "@/i18n/config";
+import Link from "next/link";
+import { href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 
 export function CollectForm({ spaceId, locale }: { spaceId: string; locale: Locale }) {
-  const t = getDictionary(locale).collect;
+  const d = getDictionary(locale);
+  const t = d.collect;
   const labels = t.ratingLabels;
   const [state, formAction, pending] = useActionState(submitTestimonial, undefined);
   const [rating, setRating] = useState(0);
@@ -83,6 +85,14 @@ export function CollectForm({ spaceId, locale }: { spaceId: string; locale: Loca
       <button disabled={pending} className="btn-primary w-full py-3">
         {pending ? t.sending : t.send}
       </button>
+
+      <p className="text-center text-xs leading-relaxed text-muted">
+        {t.consent}{" "}
+        <Link href={href(locale, "/privacy")} target="_blank" className="underline underline-offset-2">
+          {d.footer.privacy}
+        </Link>
+        .
+      </p>
     </form>
   );
 }

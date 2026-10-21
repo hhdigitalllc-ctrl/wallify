@@ -14,7 +14,9 @@ type Props = {
 };
 
 export function AuthForm({ mode, locale, action }: Props) {
-  const t = getDictionary(locale).auth;
+  const d = getDictionary(locale);
+  const t = d.auth;
+  const f = d.footer;
   const [state, formAction, pending] = useActionState(action, undefined);
   const isLogin = mode === "login";
 
@@ -61,6 +63,20 @@ export function AuthForm({ mode, locale, action }: Props) {
         <button disabled={pending} className="btn-primary w-full">
           {pending ? t.wait : isLogin ? t.login : t.signup}
         </button>
+
+        {!isLogin && (
+          <p className="text-center text-xs leading-relaxed text-muted">
+            {t.agreeStart}{" "}
+            <Link href={href(locale, "/terms")} className="underline underline-offset-2">
+              {f.terms}
+            </Link>{" "}
+            {t.agreeAnd}{" "}
+            <Link href={href(locale, "/privacy")} className="underline underline-offset-2">
+              {f.privacy}
+            </Link>
+            .
+          </p>
+        )}
 
         <p className="text-center text-sm text-muted">
           {isLogin ? t.noAccount : t.haveAccount}{" "}

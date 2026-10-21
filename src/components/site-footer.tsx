@@ -24,6 +24,14 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       ],
     },
     {
+      title: t.legal,
+      links: [
+        { path: "/terms", label: t.terms },
+        { path: "/privacy", label: t.privacy },
+        { path: "/refunds", label: t.refunds },
+      ],
+    },
+    {
       title: t.company,
       links: [{ path: "/brand", label: t.brandBook }],
     },
@@ -31,7 +39,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
 
   return (
     <footer className="border-t border-line">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:grid-cols-[1.4fr_repeat(4,1fr)]">
         <div>
           <Logo href={href(locale, "/")} />
           <p className="mt-4 max-w-xs text-sm text-muted">{t.tagline}</p>

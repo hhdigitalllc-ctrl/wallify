@@ -3,7 +3,7 @@ import { updateSession } from "@/lib/supabase/middleware";
 
 // Public pages that exist under /[locale]. English is served from the root and
 // rewritten to /en internally, so existing links keep working.
-const PUBLIC = /^\/(features|pricing|compare|faq|brand|login|signup)$|^\/(collect|wall)\/[^/]+$/;
+const PUBLIC = /^\/(features|pricing|compare|faq|brand|terms|privacy|refunds|login|signup)$|^\/(collect|wall)\/[^/]+$/;
 const LOCALE_PREFIX = /^\/(en|fr|ar)(?=\/|$)/;
 
 export async function proxy(request: NextRequest) {
