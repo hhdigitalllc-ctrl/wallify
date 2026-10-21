@@ -36,6 +36,9 @@ export async function createSpace(
     .insert({ user_id: user.id, name, slug, headline });
 
   if (error) {
+    if (error.message.includes("free_plan_space_limit")) {
+      return { error: "The free plan includes 1 space. Upgrade to Pro for unlimited spaces." };
+    }
     return {
       error:
         error.code === "23505"
