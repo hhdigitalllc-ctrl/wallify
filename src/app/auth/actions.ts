@@ -2,8 +2,15 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { defaultLocale, isLocale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/get-dictionary";
 
 export type AuthState = { error?: string; message?: string } | undefined;
+
+function readLocale(formData: FormData) {
+  const value = String(formData.get("locale") ?? "");
+  return getDictionary(isLocale(value) ? value : defaultLocale).auth;
+}
 
 function readCredentials(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
@@ -13,7 +20,8 @@ function readCredentials(formData: FormData) {
 
 export async function login(_: AuthState, formData: FormData): Promise<AuthState> {
   const { email, password } = readCredentials(formData);
-  if (!email || !password) return { error: "Email and password are required." };
+  const t = readLocale(formData);
+  if (!email || !password) return { error: t.errRequired };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -24,8 +32,9 @@ export async function login(_: AuthState, formData: FormData): Promise<AuthState
 
 export async function signup(_: AuthState, formData: FormData): Promise<AuthState> {
   const { email, password } = readCredentials(formData);
+  const t = readLocale(formData);
   if (!email || password.length < 8) {
-    return { error: "Enter an email and a password of at least 8 characters." };
+    return { error: t.errPassword };
   }
 
   const supabase = await createClient();
@@ -40,7 +49,7 @@ export async function signup(_: AuthState, formData: FormData): Promise<AuthStat
 
   // With email confirmation on, there is no session yet.
   if (!data.session) {
-    return { message: "Check your inbox to confirm your email, then log in." };
+    return { message: t.checkInbox };
   }
   redirect("/dashboard");
 }

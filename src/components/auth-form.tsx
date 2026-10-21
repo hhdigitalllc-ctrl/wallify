@@ -4,38 +4,39 @@ import Link from "next/link";
 import { useActionState } from "react";
 import type { AuthState } from "@/app/auth/actions";
 import { Logo } from "@/components/logo";
+import { href, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/get-dictionary";
 
 type Props = {
   mode: "login" | "signup";
+  locale: Locale;
   action: (state: AuthState, formData: FormData) => Promise<AuthState>;
 };
 
-export function AuthForm({ mode, action }: Props) {
+export function AuthForm({ mode, locale, action }: Props) {
+  const t = getDictionary(locale).auth;
   const [state, formAction, pending] = useActionState(action, undefined);
   const isLogin = mode === "login";
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[-200px] h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-accent/15 blur-3xl"
-      />
       <div className="relative mb-8">
-        <Logo />
+        <Logo href={href(locale, "/")} />
       </div>
 
       <form action={formAction} className="card relative w-full max-w-sm space-y-4 p-7">
+        <input type="hidden" name="locale" value={locale} />
         <div>
-          <h1 className="display text-3xl">{isLogin ? "Welcome back" : "Create your account"}</h1>
+          <h1 className="display text-3xl">{isLogin ? t.welcome : t.create}</h1>
           <p className="mt-1 text-sm text-muted">
-            {isLogin ? "Log in to manage your testimonials." : "Start collecting social proof in minutes."}
+            {isLogin ? t.loginSub : t.signupSub}
           </p>
         </div>
 
         <input
           name="email"
           type="email"
-          placeholder="you@example.com"
+          placeholder={t.email}
           autoComplete="email"
           required
           className="input"
@@ -43,7 +44,7 @@ export function AuthForm({ mode, action }: Props) {
         <input
           name="password"
           type="password"
-          placeholder={isLogin ? "Password" : "Password (8+ characters)"}
+          placeholder={isLogin ? t.password : t.passwordNew}
           autoComplete={isLogin ? "current-password" : "new-password"}
           minLength={isLogin ? undefined : 8}
           required
@@ -51,20 +52,20 @@ export function AuthForm({ mode, action }: Props) {
         />
 
         {state?.error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>
+          <p className="rounded-lg bg-danger/10 px-3 py-2 text-sm text-danger">{state.error}</p>
         )}
         {state?.message && (
-          <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{state.message}</p>
+          <p className="rounded-lg bg-success/10 px-3 py-2 text-sm text-success">{state.message}</p>
         )}
 
         <button disabled={pending} className="btn-primary w-full">
-          {pending ? "Please wait…" : isLogin ? "Log in" : "Sign up"}
+          {pending ? t.wait : isLogin ? t.login : t.signup}
         </button>
 
         <p className="text-center text-sm text-muted">
-          {isLogin ? "No account yet? " : "Already have an account? "}
-          <Link href={isLogin ? "/signup" : "/login"} className="font-medium text-accent-ink hover:underline">
-            {isLogin ? "Sign up" : "Log in"}
+          {isLogin ? t.noAccount : t.haveAccount}{" "}
+          <Link href={href(locale, isLogin ? "/signup" : "/login")} className="font-medium underline underline-offset-2">
+            {isLogin ? t.signup : t.login}
           </Link>
         </p>
       </form>
