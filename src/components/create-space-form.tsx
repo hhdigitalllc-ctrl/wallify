@@ -19,7 +19,7 @@ export function CreateSpaceForm() {
       <button disabled={pending} className="btn-primary">
         {pending ? "Creating…" : "Create space"}
       </button>
-      {state?.error && <p className="text-sm text-red-600 sm:col-span-3">{state.error}</p>}
+      {state?.error && <p className="text-sm text-danger sm:col-span-3">{state.error}</p>}
     </form>
   );
 }
