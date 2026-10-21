@@ -246,6 +246,7 @@ export const en = {
     errContent: "Write your testimonial (1000 characters max).",
     errName: "Tell us your name.",
     errTitle: "Title is too long.",
+    errRate: "Too many submissions from your connection. Please try again later.",
     errSubmit: "Could not submit, please try again.",
   },
   wall: {

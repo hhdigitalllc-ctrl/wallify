@@ -124,6 +124,7 @@ export const legalEn: LegalSet = {
           "Testimonial authors: the rating, text, name and optional title or company that you type into the form. Nothing else is required.",
           "Payments: handled by Stripe. We receive and store only a Stripe customer reference, your subscription status and renewal date, and whether you bought Lifetime. We never see your full card number.",
           "Technical data: like any web service, our hosting provider processes your IP address and request details in short-lived server logs to deliver and secure the Service.",
+          "Spam prevention: when you submit a testimonial, we keep a one-way hashed form of your IP address (it cannot be turned back into your address) for a short time, to limit abuse.",
         ],
       },
       {

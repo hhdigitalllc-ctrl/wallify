@@ -247,6 +247,7 @@ export const fr: Dictionary = {
     errContent: "Écrivez votre témoignage (1000 caractères max).",
     errName: "Indiquez votre nom.",
     errTitle: "Le titre est trop long.",
+    errRate: "Trop d'envois depuis votre connexion. Veuillez réessayer plus tard.",
     errSubmit: "Envoi impossible, veuillez réessayer.",
   },
   wall: {

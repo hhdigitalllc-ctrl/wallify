@@ -4,7 +4,7 @@ import { CopyField } from "@/components/copy-field";
 import { SubmitButton } from "@/components/submit-button";
 import { siteUrl } from "@/lib/billing";
 import { createClient } from "@/lib/supabase/server";
-import { deleteTestimonial, setApproved } from "./actions";
+import { deleteAllPending, deleteTestimonial, setApproved } from "./actions";
 
 export default async function SpacePage({
   params,
@@ -36,6 +36,7 @@ export default async function SpacePage({
 
   const list = testimonials ?? [];
   const approved = list.filter((t) => t.approved).length;
+  const pending = list.length - approved;
   const avg = list.length ? list.reduce((n, t) => n + t.rating, 0) / list.length : 0;
 
   const collectUrl = `${siteUrl}/collect/${space.slug}`;
@@ -109,7 +110,25 @@ Thank you!`)}`;
       )}
 
       <section className="mt-10 space-y-3">
-        <h2 className="text-sm font-medium text-muted">Testimonials ({list.length})</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-sm font-medium text-muted">Testimonials ({list.length})</h2>
+          {pending > 0 && (
+            <details className="group relative">
+              <summary className="btn-ghost btn-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                Delete all pending ({pending})
+              </summary>
+              <div className="absolute end-0 z-10 mt-2 w-64 rounded-2xl border border-line bg-surface p-4 shadow-lg">
+                <p className="text-sm">
+                  This permanently deletes {pending} pending testimonial{pending === 1 ? "" : "s"}. Approved ones stay.
+                </p>
+                <form action={deleteAllPending} className="mt-3">
+                  <input type="hidden" name="space_id" value={space.id} />
+                  <SubmitButton className="btn-primary btn-sm w-full">Yes, delete them</SubmitButton>
+                </form>
+              </div>
+            </details>
+          )}
+        </div>
 
         {list.length === 0 && (
           <div className="rounded-2xl border border-dashed border-line px-6 py-12 text-center text-sm text-muted">

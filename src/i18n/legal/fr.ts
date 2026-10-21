@@ -124,6 +124,7 @@ export const legalFr: LegalSet = {
           "Auteurs de témoignages : la note, le texte, le nom et, facultativement, le poste ou l'entreprise que vous saisissez dans le formulaire. Rien d'autre n'est requis.",
           "Paiements : gérés par Stripe. Nous recevons et conservons uniquement une référence client Stripe, l'état et la date de renouvellement de votre abonnement, et l'indication d'un achat Lifetime. Nous ne voyons jamais votre numéro de carte complet.",
           "Données techniques : comme tout service web, notre hébergeur traite votre adresse IP et des informations sur les requêtes dans des journaux serveur de courte durée afin de fournir et sécuriser le Service.",
+          "Lutte contre le spam : lorsque vous envoyez un témoignage, nous conservons brièvement une version hachée et irréversible de votre adresse IP (elle ne peut pas être reconvertie en votre adresse) afin de limiter les abus.",
         ],
       },
       {

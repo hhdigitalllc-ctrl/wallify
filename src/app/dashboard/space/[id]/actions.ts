@@ -18,6 +18,15 @@ export async function setApproved(formData: FormData) {
   revalidatePath("/dashboard/space/[id]", "page");
 }
 
+// Clears a flood in one click. RLS limits this to the signed-in owner's own space.
+export async function deleteAllPending(formData: FormData) {
+  const spaceId = String(formData.get("space_id"));
+  if (!/^[0-9a-f-]{36}$/i.test(spaceId)) return;
+  const supabase = await createClient();
+  await supabase.from("testimonials").delete().eq("space_id", spaceId).eq("approved", false);
+  revalidatePath("/dashboard/space/[id]", "page");
+}
+
 export async function deleteTestimonial(formData: FormData) {
   const id = String(formData.get("id"));
   const supabase = await createClient();
