@@ -2,7 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CopyField } from "@/components/copy-field";
 import { SubmitButton } from "@/components/submit-button";
-import { siteUrl } from "@/lib/billing";
+import { FREE_LIMITS, siteUrl } from "@/lib/billing";
+import { href } from "@/i18n/config";
+import { getDictionary } from "@/i18n/get-dictionary";
+import { getLocale } from "@/i18n/server";
 import { createClient } from "@/lib/supabase/server";
 import { deleteAllPending, deleteTestimonial, setApproved } from "./actions";
 
@@ -14,6 +17,8 @@ export default async function SpacePage({
   searchParams: Promise<{ limit?: string }>;
 }) {
   const [{ id }, { limit }] = await Promise.all([params, searchParams]);
+  const locale = await getLocale();
+  const t = getDictionary(locale).dash.space;
   const supabase = await createClient();
   const {
     data: { user },
@@ -39,27 +44,23 @@ export default async function SpacePage({
   const pending = list.length - approved;
   const avg = list.length ? list.reduce((n, t) => n + t.rating, 0) / list.length : 0;
 
-  const collectUrl = `${siteUrl}/collect/${space.slug}`;
-  const wallUrl = `${siteUrl}/wall/${space.slug}`;
-  const embed = `<script src="${siteUrl}/embed.js" data-space="${space.id}" async></script>`;
-  const mailto = `mailto:?subject=${encodeURIComponent(`Could you share a quick testimonial about ${space.name}?`)}&body=${encodeURIComponent(`Hi,
-
-Thanks for using ${space.name}! If you have a minute, I'd love to hear what you think. It takes about ten seconds:
-
-${collectUrl}
-
-Thank you!`)}`;
+  const collectPath = href(locale, `/collect/${space.slug}`);
+  const wallPath = href(locale, `/wall/${space.slug}`);
+  const collectUrl = `${siteUrl}${collectPath}`;
+  const wallUrl = `${siteUrl}${wallPath}`;
+  const embed = `<script src="${siteUrl}/embed.js" data-space="${space.id}"${locale === "en" ? "" : ` data-lang="${locale}"`} async></script>`;
+  const mailto = `mailto:?subject=${encodeURIComponent(t.mailSubject(space.name))}&body=${encodeURIComponent(t.mailBody(space.name, collectUrl))}`;
 
   const tiles = [
-    { label: "Testimonials", value: String(list.length) },
-    { label: "Live on your wall", value: String(approved) },
-    { label: "Avg rating", value: `${avg.toFixed(1)} ★` },
+    { label: t.total, value: String(list.length) },
+    { label: t.live, value: String(approved) },
+    { label: t.avg, value: `${avg.toFixed(1)} ★` },
   ];
 
   return (
     <>
       <Link href="/dashboard" className="text-sm text-muted hover:text-foreground">
-        ← Overview
+        {t.back}
       </Link>
       <h1 className="display mt-2 text-4xl">{space.name}</h1>
       <p className="mt-1 text-muted">{space.headline}</p>
@@ -76,54 +77,58 @@ Thank you!`)}`;
       {/* Share and embed: every link and snippet for this space, in one place */}
       <section className="card mt-6 divide-y divide-line">
         <div className="space-y-5 p-5">
-          <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted">1 · Collect</h2>
+          <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted">{t.collectStep}</h2>
           <CopyField
-            label="Collection link"
-            hint="Send this to your customers"
+            label={t.collectionLink}
+            hint={t.collectHint}
+            copyLabel={t.copy}
+            copiedLabel={t.copied}
             value={collectUrl}
             actions={[
-              { label: "Open ↗", href: `/collect/${space.slug}`, external: true },
-              { label: "Email a request", href: mailto },
+              { label: t.open, href: collectPath, external: true },
+              { label: t.emailRequest, href: mailto },
             ]}
           />
         </div>
         <div className="space-y-5 p-5">
-          <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted">2 · Show</h2>
+          <h2 className="font-mono text-[11px] uppercase tracking-widest text-muted">{t.showStep}</h2>
           <CopyField
-            label="Public wall page"
-            hint="A shareable page, no embed needed"
+            label={t.wallPage}
+            hint={t.wallHint}
+            copyLabel={t.copy}
+            copiedLabel={t.copied}
             value={wallUrl}
-            actions={[{ label: "Open ↗", href: `/wall/${space.slug}`, external: true }]}
+            actions={[{ label: t.open, href: wallPath, external: true }]}
           />
-          <CopyField label="Embed code" hint="Paste into Framer, Webflow, WordPress or HTML" value={embed} />
+          <CopyField label={t.embedCode} hint={t.embedHint} value={embed} copyLabel={t.copy} copiedLabel={t.copied} />
         </div>
       </section>
 
       {limit === "1" && (
         <p className="mt-6 rounded-xl bg-surface-2 px-4 py-3 text-sm text-foreground">
-          The free plan shows up to 10 approved testimonials.{" "}
+          {t.limitA(FREE_LIMITS.approvedTestimonials)}{" "}
           <Link href="/dashboard/billing" className="font-medium underline">
-            Upgrade to Pro
+            {t.limitUpgrade}
           </Link>{" "}
-          to approve more.
+          {t.limitB}
         </p>
       )}
 
       <section className="mt-10 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-sm font-medium text-muted">Testimonials ({list.length})</h2>
+          <h2 className="text-sm font-medium text-muted">{t.testimonials(list.length)}</h2>
           {pending > 0 && (
             <details className="group relative">
               <summary className="btn-ghost btn-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                Delete all pending ({pending})
+                {t.deleteAll(pending)}
               </summary>
               <div className="absolute end-0 z-10 mt-2 w-64 rounded-2xl border border-line bg-surface p-4 shadow-lg">
                 <p className="text-sm">
-                  This permanently deletes {pending} pending testimonial{pending === 1 ? "" : "s"}. Approved ones stay.
+                  {t.deleteWarn(pending)}
                 </p>
                 <form action={deleteAllPending} className="mt-3">
                   <input type="hidden" name="space_id" value={space.id} />
-                  <SubmitButton className="btn-primary btn-sm w-full">Yes, delete them</SubmitButton>
+                  <SubmitButton className="btn-primary btn-sm w-full">{t.deleteYes}</SubmitButton>
                 </form>
               </div>
             </details>
@@ -132,42 +137,42 @@ Thank you!`)}`;
 
         {list.length === 0 && (
           <div className="rounded-2xl border border-dashed border-line px-6 py-12 text-center text-sm text-muted">
-            Nothing yet. Share your collection link and the first testimonial will appear here.
+            {t.empty}
           </div>
         )}
 
-        {list.map((t) => (
-          <article key={t.id} className="card p-5">
+        {list.map((x) => (
+          <article key={x.id} className="card p-5">
             <div className="flex items-center justify-between gap-3">
               <span className="text-star">
-                {"★".repeat(t.rating)}
-                <span className="text-line">{"★".repeat(5 - t.rating)}</span>
+                {"★".repeat(x.rating)}
+                <span className="text-line">{"★".repeat(5 - x.rating)}</span>
               </span>
               <span
                 className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  t.approved ? "bg-success/10 text-success" : "bg-surface-2 text-muted"
+                  x.approved ? "bg-success/10 text-success" : "bg-surface-2 text-muted"
                 }`}
               >
-                {t.approved ? "Live on your wall" : "Awaiting approval"}
+                {x.approved ? t.live : t.pending}
               </span>
             </div>
-            <p className="mt-3 text-[15px] leading-relaxed">{t.content}</p>
+            <p className="mt-3 text-[15px] leading-relaxed">{x.content}</p>
             <p className="mt-3 text-sm text-muted">
-              <span className="font-medium text-foreground">{t.client_name}</span>
-              {t.client_title ? `, ${t.client_title}` : ""}
+              <span className="font-medium text-foreground">{x.client_name}</span>
+              {x.client_title ? `, ${x.client_title}` : ""}
             </p>
             <div className="mt-4 flex gap-2">
               <form action={setApproved}>
-                <input type="hidden" name="id" value={t.id} />
+                <input type="hidden" name="id" value={x.id} />
                 <input type="hidden" name="space_id" value={space.id} />
-                <input type="hidden" name="approved" value={String(!t.approved)} />
-                <SubmitButton className={t.approved ? "btn-ghost btn-sm" : "btn-primary btn-sm"}>
-                  {t.approved ? "Unapprove" : "Approve"}
+                <input type="hidden" name="approved" value={String(!x.approved)} />
+                <SubmitButton className={x.approved ? "btn-ghost btn-sm" : "btn-primary btn-sm"}>
+                  {x.approved ? t.unapprove : t.approve}
                 </SubmitButton>
               </form>
               <form action={deleteTestimonial}>
-                <input type="hidden" name="id" value={t.id} />
-                <SubmitButton className="btn-ghost btn-sm text-danger">Delete</SubmitButton>
+                <input type="hidden" name="id" value={x.id} />
+                <SubmitButton className="btn-ghost btn-sm text-danger">{t.delete}</SubmitButton>
               </form>
             </div>
           </article>
@@ -175,10 +180,10 @@ Thank you!`)}`;
       </section>
 
       <section className="mt-12">
-        <h2 className="mb-3 text-sm font-medium text-muted">Live preview</h2>
+        <h2 className="mb-3 text-sm font-medium text-muted">{t.preview}</h2>
         <iframe
-          src={`/widget/${space.id}`}
-          title="Widget preview"
+          src={`/widget/${space.id}${locale === "en" ? "" : `?lang=${locale}`}`}
+          title={t.previewTitle}
           className="h-[480px] w-full rounded-2xl border border-dashed border-line bg-white/[0.03]"
         />
       </section>

@@ -5,9 +5,14 @@ import { usePathname } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
 import { Logo } from "@/components/logo";
 import { SubmitButton } from "@/components/submit-button";
+import { DashLocaleSwitcher } from "@/components/dash-locale-switcher";
+import type { Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Plan } from "@/lib/billing";
 
 type Space = { id: string; name: string };
+type Nav = Dictionary["dash"]["nav"];
+type SidebarProps = { spaces: Space[]; plan: Plan; email: string; locale: Locale; t: Nav };
 
 const icon = "h-4 w-4 shrink-0";
 
@@ -39,7 +44,7 @@ function PlusIcon() {
   );
 }
 
-function NavContent({ spaces, plan, email }: { spaces: Space[]; plan: Plan; email: string }) {
+function NavContent({ spaces, plan, email, locale, t }: SidebarProps) {
   const pathname = usePathname();
 
   const item = (active: boolean) =>
@@ -53,22 +58,22 @@ function NavContent({ spaces, plan, email }: { spaces: Space[]; plan: Plan; emai
         <Logo href="/dashboard" />
       </div>
 
-      <nav className="flex-1 space-y-6 overflow-y-auto px-3" aria-label="Dashboard">
+      <nav className="flex-1 space-y-6 overflow-y-auto px-3" aria-label={t.dashboard}>
         <ul className="space-y-0.5">
           <li>
             <Link href="/dashboard" className={item(pathname === "/dashboard")}>
-              <GridIcon /> Overview
+              <GridIcon /> {t.overview}
             </Link>
           </li>
           <li>
             <Link href="/dashboard/billing" className={item(pathname.startsWith("/dashboard/billing"))}>
-              <CardIcon /> Billing
+              <CardIcon /> {t.billing}
             </Link>
           </li>
         </ul>
 
         <div>
-          <p className="mb-2 px-3 font-mono text-[10px] uppercase tracking-widest text-muted">Spaces</p>
+          <p className="mb-2 px-3 font-mono text-[10px] uppercase tracking-widest text-muted">{t.spaces}</p>
           <ul className="space-y-0.5">
             {spaces.map((s) => (
               <li key={s.id}>
@@ -82,7 +87,7 @@ function NavContent({ spaces, plan, email }: { spaces: Space[]; plan: Plan; emai
             ))}
             <li>
               <Link href="/dashboard#new" className={item(false)}>
-                <PlusIcon /> New space
+                <PlusIcon /> {t.newSpace}
               </Link>
             </li>
           </ul>
@@ -102,15 +107,18 @@ function NavContent({ spaces, plan, email }: { spaces: Space[]; plan: Plan; emai
             {plan === "lifetime" ? "Lifetime" : plan === "pro" ? "Pro" : "Free"}
           </span>
         </div>
+        <div className="px-2 pb-3">
+          <DashLocaleSwitcher locale={locale} label={t.language} />
+        </div>
         <form action={signOut}>
-          <SubmitButton className="btn-ghost btn-sm w-full">Log out</SubmitButton>
+          <SubmitButton className="btn-ghost btn-sm w-full">{t.logout}</SubmitButton>
         </form>
       </div>
     </div>
   );
 }
 
-export function AppSidebar(props: { spaces: Space[]; plan: Plan; email: string }) {
+export function AppSidebar(props: SidebarProps) {
   return (
     <>
       {/* Desktop: fixed left sidebar */}
@@ -123,7 +131,7 @@ export function AppSidebar(props: { spaces: Space[]; plan: Plan; email: string }
         <Logo href="/dashboard" />
         <details className="group relative">
           <summary
-            aria-label="Menu"
+            aria-label={props.t.menu}
             className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg border border-line bg-surface [&::-webkit-details-marker]:hidden"
           >
             <span className="block h-0.5 w-4 bg-foreground shadow-[0_-5px_0_var(--foreground),0_5px_0_var(--foreground)]" />

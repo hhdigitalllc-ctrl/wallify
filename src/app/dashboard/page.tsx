@@ -3,8 +3,14 @@ import { CopyButton } from "@/components/copy-button";
 import { CreateSpaceForm } from "@/components/create-space-form";
 import { FREE_LIMITS, asPlan, siteUrl } from "@/lib/billing";
 import { createClient } from "@/lib/supabase/server";
+import { href } from "@/i18n/config";
+import { getDictionary } from "@/i18n/get-dictionary";
+import { getLocale } from "@/i18n/server";
 
 export default async function DashboardPage() {
+  const locale = await getLocale();
+  const t = getDictionary(locale).dash.overview;
+  const tc = getDictionary(locale).dash.space;
   const supabase = await createClient();
   const {
     data: { user },
@@ -26,15 +32,15 @@ export default async function DashboardPage() {
   const pending = totalAll - approvedTotal;
 
   const overview = [
-    { label: "Spaces", value: String(spaces?.length ?? 0) },
-    { label: "Testimonials", value: String(totalAll) },
-    { label: "Awaiting approval", value: String(pending) },
+    { label: t.spaces, value: String(spaces?.length ?? 0) },
+    { label: t.testimonials, value: String(totalAll) },
+    { label: t.awaiting, value: String(pending) },
   ];
 
   return (
     <>
-      <h1 className="display text-4xl">Overview</h1>
-      <p className="mt-1 text-muted">Each space has its own collection link and embeddable wall.</p>
+      <h1 className="display text-4xl">{t.title}</h1>
+      <p className="mt-1 text-muted">{t.sub}</p>
 
       <dl className="mt-6 grid grid-cols-3 gap-3">
         {overview.map((o) => (
@@ -48,18 +54,17 @@ export default async function DashboardPage() {
       {asPlan(plan) === "free" && (
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-surface-2 px-5 py-3.5 text-sm">
           <p className="text-muted">
-            Free plan · {spaces?.length ?? 0}/{FREE_LIMITS.spaces} space · {approvedTotal}/
-            {FREE_LIMITS.approvedTestimonials} approved
+            {t.freePlan(spaces?.length ?? 0, FREE_LIMITS.spaces, approvedTotal, FREE_LIMITS.approvedTestimonials)}
           </p>
           <Link href="/dashboard/billing" className="font-medium underline underline-offset-4">
-            Upgrade to Pro
+            {t.upgrade}
           </Link>
         </div>
       )}
 
       <section id="new" className="card mt-6 scroll-mt-8 p-5">
-        <h2 className="mb-3 text-sm font-medium">Create a new space</h2>
-        <CreateSpaceForm />
+        <h2 className="mb-3 text-sm font-medium">{t.createTitle}</h2>
+        <CreateSpaceForm t={getDictionary(locale).dash.create} />
       </section>
 
       <section className="mt-8 grid gap-4 lg:grid-cols-2">
@@ -68,17 +73,17 @@ export default async function DashboardPage() {
             <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-surface-2 text-foreground">
               ★
             </div>
-            <p className="font-medium">No spaces yet</p>
-            <p className="mt-1 text-sm text-muted">Create your first space above to get a public collection link.</p>
+            <p className="font-medium">{t.emptyTitle}</p>
+            <p className="mt-1 text-sm text-muted">{t.emptyP}</p>
           </div>
         )}
 
         {spaces?.map((space) => {
           const s = statsBySpace.get(space.id);
           const tiles = [
-            { label: "Testimonials", value: String(s?.total ?? 0) },
-            { label: "Approved", value: String(s?.approved_count ?? 0) },
-            { label: "Avg rating", value: `${Number(s?.avg_rating ?? 0).toFixed(1)} ★` },
+            { label: t.testimonials, value: String(s?.total ?? 0) },
+            { label: t.approved, value: String(s?.approved_count ?? 0) },
+            { label: t.avgRating, value: `${Number(s?.avg_rating ?? 0).toFixed(1)} ★` },
           ];
 
           return (
@@ -99,9 +104,9 @@ export default async function DashboardPage() {
 
               <div className="mt-5 flex items-center gap-2">
                 <Link href={`/dashboard/space/${space.id}`} className="btn-primary btn-sm">
-                  Manage
+                  {t.manage}
                 </Link>
-                <CopyButton text={`${siteUrl}/collect/${space.slug}`} label="Copy collection link" />
+                <CopyButton text={`${siteUrl}${href(locale, `/collect/${space.slug}`)}`} label={t.copyLink} copiedLabel={tc.copied} />
               </div>
             </article>
           );

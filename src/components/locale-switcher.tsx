@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { href, localeNames, locales, stripLocale, type Locale } from "@/i18n/config";
+import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, href, localeNames, locales, stripLocale, type Locale } from "@/i18n/config";
 
 export function LocaleSwitcher({ locale }: { locale: Locale }) {
   const pathname = usePathname();
@@ -16,6 +16,9 @@ export function LocaleSwitcher({ locale }: { locale: Locale }) {
           href={href(l, path)}
           hrefLang={l}
           lang={l}
+          onClick={() => {
+            document.cookie = `${LOCALE_COOKIE}=${l}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`;
+          }}
           aria-current={l === locale ? "true" : undefined}
           className={`rounded-md px-2 py-1 font-medium transition ${
             l === locale ? "bg-foreground text-background" : "text-muted hover:text-foreground"

@@ -6,8 +6,11 @@
 
   var origin = new URL(script.src).origin;
   var iframe = document.createElement("iframe");
-  var theme = script.getAttribute("data-theme") === "dark" ? "?theme=dark" : "";
-  iframe.src = origin + "/widget/" + encodeURIComponent(spaceId) + theme;
+  var lang = script.getAttribute("data-lang");
+  var query = [];
+  if (script.getAttribute("data-theme") === "dark") query.push("theme=dark");
+  if (lang === "fr" || lang === "ar") query.push("lang=" + lang);
+  iframe.src = origin + "/widget/" + encodeURIComponent(spaceId) + (query.length ? "?" + query.join("&") : "");
   iframe.title = "Testimonials";
   iframe.loading = "lazy";
   iframe.style.cssText = "width:100%;border:0;display:block;min-height:200px;";

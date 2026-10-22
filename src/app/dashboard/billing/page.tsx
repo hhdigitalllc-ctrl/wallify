@@ -1,6 +1,8 @@
 import { PlanCard } from "@/components/plan-card";
 import { asPlan } from "@/lib/billing";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary } from "@/i18n/get-dictionary";
+import { getLocale } from "@/i18n/server";
 
 export default async function BillingPage({
   searchParams,
@@ -8,6 +10,7 @@ export default async function BillingPage({
   searchParams: Promise<{ upgraded?: string; portal?: string }>;
 }) {
   const { upgraded, portal } = await searchParams;
+  const t = getDictionary(await getLocale()).dash.billing;
   const supabase = await createClient();
   const {
     data: { user },
@@ -22,14 +25,15 @@ export default async function BillingPage({
 
   return (
     <>
-      <h1 className="display text-4xl">Billing</h1>
-      <p className="mt-1 text-muted">Your plan, usage and payment details.</p>
+      <h1 className="display text-4xl">{t.title}</h1>
+      <p className="mt-1 text-muted">{t.sub}</p>
       <PlanCard
         plan={asPlan(plan)}
         spaces={spaces?.length ?? 0}
         approved={approved}
         justUpgraded={upgraded === "1"}
         portalError={portal === "error"}
+        t={t}
       />
     </>
   );

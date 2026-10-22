@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary } from "@/i18n/get-dictionary";
+import { getLocale } from "@/i18n/server";
 
 export type CreateSpaceState = { error?: string } | undefined;
 
@@ -18,18 +20,19 @@ export async function createSpace(
   _: CreateSpaceState,
   formData: FormData,
 ): Promise<CreateSpaceState> {
+  const t = getDictionary(await getLocale()).dash.create;
   const name = String(formData.get("name") ?? "").trim();
-  const headline = String(formData.get("headline") ?? "").trim() || "Send us some love!";
+  const headline = String(formData.get("headline") ?? "").trim() || t.defaultHeadline;
   const slug = slugify(String(formData.get("slug") ?? "") || name);
 
-  if (!name || name.length > 80) return { error: "Give your space a name (80 characters max)." };
-  if (!slug) return { error: "Slug needs at least one letter or number." };
+  if (!name || name.length > 80) return { error: t.errName };
+  if (!slug) return { error: t.errSlug };
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { error: "You are signed out." };
+  if (!user) return { error: t.errSignedOut };
 
   const { error } = await supabase
     .from("spaces")
@@ -37,14 +40,9 @@ export async function createSpace(
 
   if (error) {
     if (error.message.includes("free_plan_space_limit")) {
-      return { error: "The free plan includes 1 space. Upgrade to Pro for unlimited spaces." };
+      return { error: t.errFreeLimit };
     }
-    return {
-      error:
-        error.code === "23505"
-          ? `The slug "${slug}" is taken, try another.`
-          : error.message,
-    };
+    return { error: error.code === "23505" ? t.errSlugTaken(slug) : t.errGeneric };
   }
 
   revalidatePath("/dashboard");

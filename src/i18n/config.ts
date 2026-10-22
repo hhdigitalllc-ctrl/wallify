@@ -28,3 +28,7 @@ export function stripLocale(pathname: string) {
   if (first && isLocale(first)) return "/" + rest.join("/");
   return pathname || "/";
 }
+
+// The dashboard has no locale segment in its URL, so it follows this cookie.
+export const LOCALE_COOKIE = "locale";
+export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;

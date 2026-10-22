@@ -2,8 +2,9 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { createSpace } from "@/app/dashboard/actions";
+import type { Dictionary } from "@/i18n/get-dictionary";
 
-export function CreateSpaceForm() {
+export function CreateSpaceForm({ t }: { t: Dictionary["dash"]["create"] }) {
   const [state, formAction, pending] = useActionState(createSpace, undefined);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -14,10 +15,10 @@ export function CreateSpaceForm() {
 
   return (
     <form ref={formRef} action={formAction} className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
-      <input name="name" placeholder="Space name, e.g. Mood Print" required className="input" />
-      <input name="headline" placeholder="Headline: Send us some love!" className="input" />
+      <input name="name" placeholder={t.namePh} required className="input" />
+      <input name="headline" placeholder={t.headlinePh} className="input" />
       <button disabled={pending} className="btn-primary">
-        {pending ? "Creating…" : "Create space"}
+        {pending ? t.creating : t.create}
       </button>
       {state?.error && <p className="text-sm text-danger sm:col-span-3">{state.error}</p>}
     </form>

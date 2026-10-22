@@ -1,15 +1,20 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { defaultLocale, isLocale } from "@/i18n/config";
+import { href, LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, defaultLocale, isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
+import { getLocale } from "@/i18n/server";
 
 export type AuthState = { error?: string; message?: string } | undefined;
 
-function readLocale(formData: FormData) {
+async function readLocale(formData: FormData) {
   const value = String(formData.get("locale") ?? "");
-  return getDictionary(isLocale(value) ? value : defaultLocale).auth;
+  const locale = isLocale(value) ? value : defaultLocale;
+  // The dashboard follows the language the visitor signed in with
+  (await cookies()).set(LOCALE_COOKIE, locale, { path: "/", maxAge: LOCALE_COOKIE_MAX_AGE, sameSite: "lax" });
+  return getDictionary(locale);
 }
 
 function readCredentials(formData: FormData) {
@@ -20,19 +25,20 @@ function readCredentials(formData: FormData) {
 
 export async function login(_: AuthState, formData: FormData): Promise<AuthState> {
   const { email, password } = readCredentials(formData);
-  const t = readLocale(formData);
+  const d = await readLocale(formData);
+  const t = d.auth;
   if (!email || !password) return { error: t.errRequired };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: error.message };
+  if (error) return { error: error.code === "invalid_credentials" ? d.dash.errLoginInvalid : error.message };
 
   redirect("/dashboard");
 }
 
 export async function signup(_: AuthState, formData: FormData): Promise<AuthState> {
   const { email, password } = readCredentials(formData);
-  const t = readLocale(formData);
+  const t = (await readLocale(formData)).auth;
   if (!email || password.length < 8) {
     return { error: t.errPassword };
   }
@@ -57,5 +63,6 @@ export async function signup(_: AuthState, formData: FormData): Promise<AuthStat
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/login");
+  const locale = await getLocale();
+  redirect(href(locale, "/login"));
 }

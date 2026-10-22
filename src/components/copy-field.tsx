@@ -6,12 +6,14 @@ type Props = {
   label: string;
   hint?: string;
   value: string;
+  copyLabel: string;
+  copiedLabel: string;
   /** Optional extra actions rendered after the copy button */
   actions?: { label: string; href: string; external?: boolean }[];
 };
 
 // A read-only value (link or code) with a copy button and optional shortcut links.
-export function CopyField({ label, hint, value, actions = [] }: Props) {
+export function CopyField({ label, hint, value, copyLabel, copiedLabel, actions = [] }: Props) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -39,7 +41,7 @@ export function CopyField({ label, hint, value, actions = [] }: Props) {
           aria-label={label}
         />
         <button type="button" onClick={copy} className="btn-primary btn-sm shrink-0">
-          {copied ? "✓ Copied" : "Copy"}
+          {copied ? copiedLabel : copyLabel}
         </button>
         {actions.map((a) => (
           <a
