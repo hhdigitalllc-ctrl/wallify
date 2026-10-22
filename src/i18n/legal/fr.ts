@@ -1,4 +1,4 @@
-import { FREE_LIMITS, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
+import { FREE_LIMITS, LAUNCH_SPOTS, LIFETIME_LAUNCH_PRICE_USD, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
 import type { LegalSet } from "./types";
 
 export const legalFr: LegalSet = {
@@ -54,7 +54,7 @@ export const legalFr: LegalSet = {
         p: [
           `L'offre Gratuite comprend ${FREE_LIMITS.spaces} espace et jusqu'à ${FREE_LIMITS.approvedTestimonials} témoignages validés, avec un badge « Propulsé par Wallify ».`,
           `Pro coûte ${PRO_PRICE_USD} $ par mois et se renouvelle automatiquement chaque mois jusqu'à ce que vous résiliiez. Vous pouvez résilier à tout moment depuis « Gérer la facturation » dans votre tableau de bord. La résiliation prend effet à la fin de la période déjà payée, et vous gardez l'accès jusque-là.`,
-          `Lifetime est un paiement unique de ${LIFETIME_PRICE_USD} $ qui vous donne les fonctionnalités Pro tant que Wallify est proposé, mises à jour futures comprises. Ce n'est pas un abonnement et il ne se renouvelle pas. Si nous arrêtons définitivement le Service, nous vous préviendrons au moins 30 jours à l'avance et, pendant ce délai, vous pourrez nous demander un export de vos témoignages.`,
+          `Lifetime est un paiement unique (au prix affiché lors du paiement : ${LIFETIME_PRICE_USD} $, ou ${LIFETIME_LAUNCH_PRICE_USD} $ au prix de lancement pour les ${LAUNCH_SPOTS} premiers clients) qui vous donne les fonctionnalités Pro tant que Wallify est proposé, mises à jour futures comprises. Ce n'est pas un abonnement et il ne se renouvelle pas. Si nous arrêtons définitivement le Service, nous vous préviendrons au moins 30 jours à l'avance et, pendant ce délai, vous pourrez nous demander un export de vos témoignages.`,
           "Les paiements sont traités par Stripe. Nous ne voyons ni ne conservons jamais vos données complètes de carte bancaire. Les prix sont affichés avant le paiement et peuvent inclure les taxes applicables. Si nous modifions le prix d'un abonnement, nous vous en informerons à l'avance et le nouveau prix s'appliquera dès votre prochain renouvellement. Le prix des achats Lifetime déjà effectués ne change pas.",
           "Les remboursements sont décrits dans notre Politique de remboursement.",
         ],
@@ -194,7 +194,7 @@ export const legalFr: LegalSet = {
       {
         h: "Remboursement sous 14 jours",
         p: [
-          `Vous pouvez demander un remboursement intégral dans les 14 jours suivant votre premier paiement pour Pro (${PRO_PRICE_USD} $/mois) ou Lifetime (${LIFETIME_PRICE_USD} $ en une fois), quel qu'en soit le motif.`,
+          `Vous pouvez demander un remboursement intégral dans les 14 jours suivant votre premier paiement pour Pro (${PRO_PRICE_USD} $/mois) ou Lifetime (paiement unique), quel qu'en soit le motif.`,
         ],
       },
       {

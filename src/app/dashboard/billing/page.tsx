@@ -3,6 +3,7 @@ import { asPlan } from "@/lib/billing";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { getLocale } from "@/i18n/server";
+import { getLifetimeSold, lifetimeOffer } from "@/lib/launch";
 
 export default async function BillingPage({
   searchParams,
@@ -11,6 +12,7 @@ export default async function BillingPage({
 }) {
   const { upgraded, portal } = await searchParams;
   const t = getDictionary(await getLocale()).dash.billing;
+  const offer = lifetimeOffer(await getLifetimeSold());
   const supabase = await createClient();
   const {
     data: { user },
@@ -33,6 +35,7 @@ export default async function BillingPage({
         approved={approved}
         justUpgraded={upgraded === "1"}
         portalError={portal === "error"}
+        lifetimePrice={offer.price}
         t={t}
       />
     </>

@@ -1,5 +1,8 @@
-export const PRO_PRICE_USD = 12;
-export const LIFETIME_PRICE_USD = 49;
+export const PRO_PRICE_USD = 9;
+// Lifetime: a limited launch price for the first customers, then the regular price
+export const LIFETIME_LAUNCH_PRICE_USD = 39;
+export const LIFETIME_PRICE_USD = 69;
+export const LAUNCH_SPOTS = 50;
 
 export const FREE_LIMITS = {
   spaces: 1,

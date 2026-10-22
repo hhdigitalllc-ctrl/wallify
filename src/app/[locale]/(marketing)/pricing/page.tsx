@@ -14,6 +14,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: t.title, description: t.description };
 }
 
+// Re-render every few minutes so the launch-spots counter stays fresh
+export const revalidate = 300;
+
 export default async function PricingPage({ params }: Props) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();

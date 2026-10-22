@@ -1,4 +1,4 @@
-import { FREE_LIMITS, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
+import { FREE_LIMITS, LAUNCH_SPOTS, LIFETIME_LAUNCH_PRICE_USD, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
 
 export const en = {
   meta: {
@@ -170,12 +170,14 @@ export const en = {
     },
     {
       q: "What does Lifetime mean?",
-      a: `Pay $${LIFETIME_PRICE_USD} once and keep Pro for as long as Wallify is offered, with all future updates included. No subscription, no renewals.`,
+      a: `Pay $${LIFETIME_LAUNCH_PRICE_USD} once (launch price for the first ${LAUNCH_SPOTS} customers, then $${LIFETIME_PRICE_USD}) and keep Pro for as long as Wallify is offered, with all future updates included. No subscription, no renewals.`,
     },
   ],
   plans: {
     popular: "Popular",
     best: "Best value",
+    launch: "Launch price",
+    spotsLeft: (n: number, total: number) => `${n} of ${total} launch spots left`,
     free: {
       name: "Free",
       note: "forever",

@@ -1,7 +1,7 @@
 import { SubmitButton } from "@/components/submit-button";
 import { openPortal, startCheckout } from "@/app/dashboard/billing-actions";
 import type { Dictionary } from "@/i18n/get-dictionary";
-import { FREE_LIMITS, LIFETIME_PRICE_USD, PRO_PRICE_USD, billingEnabled, type Plan } from "@/lib/billing";
+import { FREE_LIMITS, PRO_PRICE_USD, billingEnabled, type Plan } from "@/lib/billing";
 
 type Props = {
   plan: Plan;
@@ -9,10 +9,11 @@ type Props = {
   approved: number;
   justUpgraded: boolean;
   portalError?: boolean;
+  lifetimePrice: number;
   t: Dictionary["dash"]["billing"];
 };
 
-export function PlanCard({ plan, spaces, approved, justUpgraded, portalError, t }: Props) {
+export function PlanCard({ plan, spaces, approved, justUpgraded, portalError, lifetimePrice, t }: Props) {
   if (plan !== "free") {
     return (
       <section className="card mt-6 flex flex-wrap items-center justify-between gap-3 p-5">
@@ -90,7 +91,7 @@ export function PlanCard({ plan, spaces, approved, justUpgraded, portalError, t 
 
         <div className="rounded-xl bg-surface-2 p-5">
           <p className="display text-2xl">
-            Lifetime <span className="text-base font-medium tracking-normal text-muted">${LIFETIME_PRICE_USD} {t.once}</span>
+            Lifetime <span className="text-base font-medium tracking-normal text-muted">${lifetimePrice} {t.once}</span>
           </p>
           <p className="mt-1 text-sm text-muted">{t.lifetimeDesc}</p>
           {enabled ? (

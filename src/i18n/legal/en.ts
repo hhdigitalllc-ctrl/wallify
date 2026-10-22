@@ -1,4 +1,4 @@
-import { FREE_LIMITS, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
+import { FREE_LIMITS, LAUNCH_SPOTS, LIFETIME_LAUNCH_PRICE_USD, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
 import type { LegalSet } from "./types";
 
 export const legalEn: LegalSet = {
@@ -54,7 +54,7 @@ export const legalEn: LegalSet = {
         p: [
           `The Free plan includes ${FREE_LIMITS.spaces} space and up to ${FREE_LIMITS.approvedTestimonials} approved testimonials, with a “Powered by Wallify” badge.`,
           `Pro costs $${PRO_PRICE_USD} per month and renews automatically each month until you cancel. You can cancel at any time from Manage billing in your dashboard. Cancellation takes effect at the end of the period you have already paid for, and you keep access until then.`,
-          `Lifetime is a one-time payment of $${LIFETIME_PRICE_USD} that gives you the Pro features for as long as Wallify is offered, with future updates included. It is not a subscription and does not renew. If we permanently discontinue the Service, we will give you at least 30 days’ notice and, during that time, you may ask us for an export of your testimonials.`,
+          `Lifetime is a one-time payment (the price shown at checkout: $${LIFETIME_PRICE_USD}, or the $${LIFETIME_LAUNCH_PRICE_USD} launch price for the first ${LAUNCH_SPOTS} customers) that gives you the Pro features for as long as Wallify is offered, with future updates included. It is not a subscription and does not renew. If we permanently discontinue the Service, we will give you at least 30 days’ notice and, during that time, you may ask us for an export of your testimonials.`,
           "Payments are processed by Stripe. We never see or store your full card details. Prices are shown before you pay and may include applicable taxes. If we change the price of a subscription, we will tell you in advance and the new price applies from your next renewal. Prices of Lifetime purchases you have already made do not change.",
           "Refunds are described in our Refund Policy.",
         ],
@@ -194,7 +194,7 @@ export const legalEn: LegalSet = {
       {
         h: "14-day refund",
         p: [
-          `You can request a full refund within 14 days of your first payment for Pro ($${PRO_PRICE_USD}/month) or Lifetime ($${LIFETIME_PRICE_USD} one-time), for any reason.`,
+          `You can request a full refund within 14 days of your first payment for Pro ($${PRO_PRICE_USD}/month) or Lifetime (one-time payment), for any reason.`,
         ],
       },
       {

@@ -1,4 +1,4 @@
-import { FREE_LIMITS, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
+import { FREE_LIMITS, LAUNCH_SPOTS, LIFETIME_LAUNCH_PRICE_USD, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
 import type { Dictionary } from "./en";
 
 export const ar: Dictionary = {
@@ -171,12 +171,14 @@ export const ar: Dictionary = {
     },
     {
       q: "ماذا تعني خطة مدى الحياة؟",
-      a: `ادفع ${LIFETIME_PRICE_USD} دولارًا مرة واحدة واحتفظ بخطة Pro ما دام Wallify متاحًا، مع جميع التحديثات المستقبلية. بلا اشتراك ولا تجديد.`,
+      a: `ادفع ${LIFETIME_LAUNCH_PRICE_USD} دولارًا مرة واحدة (سعر الإطلاق لأول ${LAUNCH_SPOTS} عميلًا، ثم ${LIFETIME_PRICE_USD} دولارًا) واحتفظ بخطة Pro ما دام Wallify متاحًا، مع جميع التحديثات المستقبلية. بلا اشتراك ولا تجديد.`,
     },
   ],
   plans: {
     popular: "الأكثر طلبًا",
     best: "أفضل قيمة",
+    launch: "سعر الإطلاق",
+    spotsLeft: (n: number, total: number) => `بقي ${n} من ${total} مقعدًا بسعر الإطلاق`,
     free: {
       name: "مجاني",
       note: "دائمًا",

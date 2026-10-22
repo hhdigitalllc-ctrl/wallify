@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { stripe } from "@/lib/stripe";
-import { LIFETIME_PRICE_USD, PRO_PRICE_USD, siteUrl } from "@/lib/billing";
+import { PRO_PRICE_USD, siteUrl } from "@/lib/billing";
+import { getLifetimeSold, lifetimeOffer } from "@/lib/launch";
 
 // Stripe Managed Payments requires a product tax code: SaaS, business use
 const TAX_CODE = "txcd_10103001";
@@ -37,6 +38,8 @@ export async function startCheckout(formData: FormData) {
       : { customer_email: user.email }),
   };
 
+  const lifetimePrice = plan === "lifetime" ? lifetimeOffer(await getLifetimeSold()).price : 0;
+
   const session =
     plan === "lifetime"
       ? await stripe().checkout.sessions.create({
@@ -47,7 +50,7 @@ export async function startCheckout(formData: FormData) {
               quantity: 1,
               price_data: {
                 currency: "usd",
-                unit_amount: LIFETIME_PRICE_USD * 100,
+                unit_amount: lifetimePrice * 100,
                 product_data: { name: "Wallify Lifetime", tax_code: TAX_CODE },
               },
             },

@@ -1,4 +1,4 @@
-import { FREE_LIMITS, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
+import { FREE_LIMITS, LAUNCH_SPOTS, LIFETIME_LAUNCH_PRICE_USD, LIFETIME_PRICE_USD, PRO_PRICE_USD } from "@/lib/billing";
 import type { Dictionary } from "./en";
 
 export const fr: Dictionary = {
@@ -171,12 +171,14 @@ export const fr: Dictionary = {
     },
     {
       q: "Que signifie l'offre Lifetime ?",
-      a: `Payez ${LIFETIME_PRICE_USD} $ une seule fois et gardez Pro tant que Wallify est proposé, mises à jour futures comprises. Pas d'abonnement, pas de renouvellement.`,
+      a: `Payez ${LIFETIME_LAUNCH_PRICE_USD} $ une seule fois (prix de lancement pour les ${LAUNCH_SPOTS} premiers clients, puis ${LIFETIME_PRICE_USD} $) et gardez Pro tant que Wallify est proposé, mises à jour futures comprises. Pas d'abonnement, pas de renouvellement.`,
     },
   ],
   plans: {
     popular: "Populaire",
     best: "Meilleur rapport",
+    launch: "Prix de lancement",
+    spotsLeft: (n: number, total: number) => `${n} places sur ${total} au prix de lancement`,
     free: {
       name: "Gratuit",
       note: "à vie",
