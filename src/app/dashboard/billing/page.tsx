@@ -5,9 +5,9 @@ import { createClient } from "@/lib/supabase/server";
 export default async function BillingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ upgraded?: string }>;
+  searchParams: Promise<{ upgraded?: string; portal?: string }>;
 }) {
-  const { upgraded } = await searchParams;
+  const { upgraded, portal } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -29,6 +29,7 @@ export default async function BillingPage({
         spaces={spaces?.length ?? 0}
         approved={approved}
         justUpgraded={upgraded === "1"}
+        portalError={portal === "error"}
       />
     </>
   );

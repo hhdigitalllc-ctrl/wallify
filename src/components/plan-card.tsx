@@ -7,9 +7,10 @@ type Props = {
   spaces: number;
   approved: number;
   justUpgraded: boolean;
+  portalError?: boolean;
 };
 
-export function PlanCard({ plan, spaces, approved, justUpgraded }: Props) {
+export function PlanCard({ plan, spaces, approved, justUpgraded, portalError }: Props) {
   if (plan !== "free") {
     return (
       <section className="card mt-6 flex flex-wrap items-center justify-between gap-3 p-5">
@@ -22,6 +23,11 @@ export function PlanCard({ plan, spaces, approved, justUpgraded }: Props) {
           </p>
           <p className="mt-1 text-sm text-muted">Unlimited spaces and testimonials, no badge.</p>
         </div>
+        {portalError && (
+          <p className="w-full rounded-lg bg-danger/10 px-3 py-2 text-sm text-danger">
+            We couldn&apos;t open the billing portal. Please try again, or email contact@hhdigitalllc.us and we&apos;ll sort it out.
+          </p>
+        )}
         {plan === "pro" && (
           <form action={openPortal}>
             <SubmitButton className="btn-ghost btn-sm">Manage billing</SubmitButton>

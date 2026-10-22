@@ -91,10 +91,16 @@ export async function openPortal() {
     .maybeSingle();
   if (!sub?.stripe_customer_id) redirect("/dashboard/billing");
 
-  const session = await stripe().billingPortal.sessions.create({
-    customer: sub.stripe_customer_id,
-    return_url: `${siteUrl}/dashboard/billing`,
-  });
+  let url: string | null = null;
+  try {
+    const session = await stripe().billingPortal.sessions.create({
+      customer: sub.stripe_customer_id,
+      return_url: `${siteUrl}/dashboard/billing`,
+    });
+    url = session.url;
+  } catch (err) {
+    console.error("billing portal failed", err);
+  }
 
-  redirect(session.url);
+  redirect(url ?? "/dashboard/billing?portal=error");
 }
