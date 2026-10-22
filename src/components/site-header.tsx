@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HeaderAuth } from "@/components/header-auth";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Logo } from "@/components/logo";
 import { href, type Locale } from "@/i18n/config";
@@ -32,12 +33,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 
         <div className="flex items-center gap-2">
           <LocaleSwitcher locale={locale} />
-          <Link href={href(locale, "/login")} className="btn btn-ghost btn-sm hidden sm:inline-flex">
-            {t.login}
-          </Link>
-          <Link href={href(locale, "/signup")} className="btn btn-primary btn-sm hidden sm:inline-flex">
-            {t.getStarted}
-          </Link>
+          <HeaderAuth labels={t} loginHref={href(locale, "/login")} signupHref={href(locale, "/signup")} variant="bar" />
 
           {/* Mobile menu: native <details>, no JS needed */}
           <details className="group relative md:hidden">
@@ -53,12 +49,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
                   {n.label}
                 </Link>
               ))}
-              <Link href={href(locale, "/login")} className="block rounded-lg px-3 py-2 text-sm hover:bg-surface-2">
-                {t.login}
-              </Link>
-              <Link href={href(locale, "/signup")} className="block rounded-lg px-3 py-2 text-sm font-semibold hover:bg-surface-2">
-                {t.getStarted}
-              </Link>
+              <HeaderAuth labels={t} loginHref={href(locale, "/login")} signupHref={href(locale, "/signup")} variant="menu" />
             </div>
           </details>
         </div>

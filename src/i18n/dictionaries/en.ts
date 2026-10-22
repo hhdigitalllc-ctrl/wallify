@@ -14,6 +14,8 @@ export const en = {
     login: "Log in",
     getStarted: "Get started",
     menu: "Menu",
+    dashboard: "Dashboard",
+    backHome: "← Back to home",
   },
   footer: {
     tagline: "Collect testimonials with a link. Show them on any site. Built for makers.",
@@ -260,7 +262,7 @@ export const en = {
     poweredBy: "Powered by",
   },
   dash: {
-    nav: { overview: "Overview", billing: "Billing", spaces: "Spaces", newSpace: "New space", logout: "Log out", menu: "Menu", dashboard: "Dashboard", language: "Language" },
+    nav: { website: "Website", overview: "Overview", billing: "Billing", spaces: "Spaces", newSpace: "New space", logout: "Log out", menu: "Menu", dashboard: "Dashboard", language: "Language" },
     overview: {
       title: "Overview",
       sub: "Each space has its own collection link and embeddable wall.",

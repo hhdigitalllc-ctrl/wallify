@@ -15,6 +15,8 @@ export const fr: Dictionary = {
     login: "Se connecter",
     getStarted: "Commencer",
     menu: "Menu",
+    dashboard: "Tableau de bord",
+    backHome: "← Retour à l'accueil",
   },
   footer: {
     tagline: "Collectez des témoignages avec un lien. Affichez-les sur n'importe quel site. Conçu pour les créateurs.",
@@ -261,7 +263,7 @@ export const fr: Dictionary = {
     poweredBy: "Propulsé par",
   },
   dash: {
-    nav: { overview: "Aperçu", billing: "Facturation", spaces: "Espaces", newSpace: "Nouvel espace", logout: "Se déconnecter", menu: "Menu", dashboard: "Tableau de bord", language: "Langue" },
+    nav: { website: "Site web", overview: "Aperçu", billing: "Facturation", spaces: "Espaces", newSpace: "Nouvel espace", logout: "Se déconnecter", menu: "Menu", dashboard: "Tableau de bord", language: "Langue" },
     overview: {
       title: "Aperçu",
       sub: "Chaque espace a son propre lien de collecte et son mur intégrable.",

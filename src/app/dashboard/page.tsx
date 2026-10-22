@@ -11,6 +11,8 @@ export default async function DashboardPage() {
   const locale = await getLocale();
   const t = getDictionary(locale).dash.overview;
   const tc = getDictionary(locale).dash.space;
+  const { namePh, headlinePh, create, creating } = getDictionary(locale).dash.create;
+  const createText = { namePh, headlinePh, create, creating };
   const supabase = await createClient();
   const {
     data: { user },
@@ -64,7 +66,7 @@ export default async function DashboardPage() {
 
       <section id="new" className="card mt-6 scroll-mt-8 p-5">
         <h2 className="mb-3 text-sm font-medium">{t.createTitle}</h2>
-        <CreateSpaceForm t={getDictionary(locale).dash.create} />
+        <CreateSpaceForm t={createText} />
       </section>
 
       <section className="mt-8 grid gap-4 lg:grid-cols-2">

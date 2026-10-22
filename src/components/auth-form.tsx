@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import type { AuthState } from "@/app/auth/actions";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Logo } from "@/components/logo";
 import { href, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -21,10 +22,16 @@ export function AuthForm({ mode, locale, action }: Props) {
   const isLogin = mode === "login";
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
-      <div className="relative mb-8">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-10 pt-24">
+      <header className="absolute inset-x-0 top-0 mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-4">
         <Logo href={href(locale, "/")} />
-      </div>
+        <div className="flex items-center gap-3">
+          <Link href={href(locale, "/")} className="hidden text-sm text-muted transition hover:text-foreground sm:block">
+            {d.nav.backHome}
+          </Link>
+          <LocaleSwitcher locale={locale} />
+        </div>
+      </header>
 
       <form action={formAction} className="card relative w-full max-w-sm space-y-4 p-7">
         <input type="hidden" name="locale" value={locale} />

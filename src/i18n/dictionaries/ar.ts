@@ -15,6 +15,8 @@ export const ar: Dictionary = {
     login: "تسجيل الدخول",
     getStarted: "ابدأ الآن",
     menu: "القائمة",
+    dashboard: "لوحة التحكم",
+    backHome: "→ العودة إلى الرئيسية",
   },
   footer: {
     tagline: "اجمع الشهادات برابط واحد، واعرضها على أي موقع. صُمّم لصنّاع المنتجات.",
@@ -261,7 +263,7 @@ export const ar: Dictionary = {
     poweredBy: "بدعم من",
   },
   dash: {
-    nav: { overview: "نظرة عامة", billing: "الفوترة", spaces: "المساحات", newSpace: "مساحة جديدة", logout: "تسجيل الخروج", menu: "القائمة", dashboard: "لوحة التحكم", language: "اللغة" },
+    nav: { website: "الموقع", overview: "نظرة عامة", billing: "الفوترة", spaces: "المساحات", newSpace: "مساحة جديدة", logout: "تسجيل الخروج", menu: "القائمة", dashboard: "لوحة التحكم", language: "اللغة" },
     overview: {
       title: "نظرة عامة",
       sub: "لكل مساحة رابط جمع خاص بها وجدار قابل للتضمين.",

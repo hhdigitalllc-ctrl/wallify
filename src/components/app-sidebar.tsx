@@ -6,7 +6,7 @@ import { signOut } from "@/app/auth/actions";
 import { Logo } from "@/components/logo";
 import { SubmitButton } from "@/components/submit-button";
 import { DashLocaleSwitcher } from "@/components/dash-locale-switcher";
-import type { Locale } from "@/i18n/config";
+import { href, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Plan } from "@/lib/billing";
 
@@ -36,6 +36,14 @@ function CardIcon() {
   );
 }
 
+function HomeIcon() {
+  return (
+    <svg className={icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function PlusIcon() {
   return (
     <svg className={icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -46,6 +54,7 @@ function PlusIcon() {
 
 function NavContent({ spaces, plan, email, locale, t }: SidebarProps) {
   const pathname = usePathname();
+  const homeHref = href(locale, "/");
 
   const item = (active: boolean) =>
     `flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition ${
@@ -68,6 +77,11 @@ function NavContent({ spaces, plan, email, locale, t }: SidebarProps) {
           <li>
             <Link href="/dashboard/billing" className={item(pathname.startsWith("/dashboard/billing"))}>
               <CardIcon /> {t.billing}
+            </Link>
+          </li>
+          <li>
+            <Link href={homeHref} className={item(false)}>
+              <HomeIcon /> {t.website}
             </Link>
           </li>
         </ul>

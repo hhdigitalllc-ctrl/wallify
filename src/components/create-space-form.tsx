@@ -4,7 +4,7 @@ import { useActionState, useEffect, useRef } from "react";
 import { createSpace } from "@/app/dashboard/actions";
 import type { Dictionary } from "@/i18n/get-dictionary";
 
-export function CreateSpaceForm({ t }: { t: Dictionary["dash"]["create"] }) {
+export function CreateSpaceForm({ t }: { t: Pick<Dictionary["dash"]["create"], "namePh" | "headlinePh" | "create" | "creating"> }) {
   const [state, formAction, pending] = useActionState(createSpace, undefined);
   const formRef = useRef<HTMLFormElement>(null);
 
