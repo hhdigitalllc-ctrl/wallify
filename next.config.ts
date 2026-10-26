@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
 const baseHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(self), geolocation=(), payment=(), usb=()" },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
 ];
 
@@ -16,6 +16,8 @@ const noFraming = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Voice testimonials are uploaded through a server action (60 s at low bitrate is well under this)
+  experimental: { serverActions: { bodySizeLimit: "2mb" } },
   turbopack: {
     rules: {
       "*.css": {

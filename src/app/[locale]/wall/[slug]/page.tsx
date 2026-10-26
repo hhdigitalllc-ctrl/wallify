@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Logo } from "@/components/logo";
+import { VoicePlayer } from "@/components/voice-player";
+import { signAudioUrls } from "@/lib/audio";
 import { href, isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { FREE_LIMITS } from "@/lib/billing";
@@ -39,12 +41,14 @@ export default async function WallPage({ params }: Props) {
   const { data: isPro } = await supabase.rpc("space_is_pro", { space: space.id });
   const { data: all } = await supabase
     .from("testimonials")
-    .select("id, rating, content, client_name, client_title")
+    .select("id, rating, content, client_name, client_title, audio_path, audio_seconds")
     .eq("space_id", space.id)
     .eq("approved", true)
     .order("created_at", { ascending: false });
 
   const testimonials = isPro ? all : all?.slice(0, FREE_LIMITS.approvedTestimonials);
+  const audioUrls = await signAudioUrls((testimonials ?? []).map((x) => x.audio_path));
+  const voice = getDictionary(locale).collect.voice;
   const count = testimonials?.length ?? 0;
   const avg = count ? testimonials!.reduce((n, x) => n + x.rating, 0) / count : 0;
 
@@ -72,7 +76,10 @@ export default async function WallPage({ params }: Props) {
               {"★".repeat(x.rating)}
               <span className="text-line">{"★".repeat(5 - x.rating)}</span>
             </div>
-            <blockquote className="mt-3 text-[15px] leading-relaxed">{x.content}</blockquote>
+            {x.content && <blockquote className="mt-3 text-[15px] leading-relaxed">{x.content}</blockquote>}
+            {x.audio_path && audioUrls.get(x.audio_path) && (
+              <VoicePlayer src={audioUrls.get(x.audio_path)!} seconds={x.audio_seconds ?? 0} play={voice.play} pause={voice.pause} />
+            )}
             <figcaption className="mt-5 flex items-center gap-3">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-sm font-semibold text-background">
                 {x.client_name.charAt(0).toUpperCase()}

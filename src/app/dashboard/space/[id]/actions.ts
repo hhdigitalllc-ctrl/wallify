@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { removeAudio } from "@/lib/audio";
 import { createClient } from "@/lib/supabase/server";
 
 // RLS limits both writes to testimonials in the signed-in user's own spaces.
@@ -23,13 +24,18 @@ export async function deleteAllPending(formData: FormData) {
   const spaceId = String(formData.get("space_id"));
   if (!/^[0-9a-f-]{36}$/i.test(spaceId)) return;
   const supabase = await createClient();
+  const { data: doomed } = await supabase.from("testimonials").select("audio_path").eq("space_id", spaceId).eq("approved", false);
   await supabase.from("testimonials").delete().eq("space_id", spaceId).eq("approved", false);
+  await removeAudio((doomed ?? []).map((x) => x.audio_path));
   revalidatePath("/dashboard/space/[id]", "page");
 }
 
 export async function deleteTestimonial(formData: FormData) {
   const id = String(formData.get("id"));
   const supabase = await createClient();
-  await supabase.from("testimonials").delete().eq("id", id);
+  // RLS limits both calls to testimonials in the signed-in user's own spaces
+  const { data: doomed } = await supabase.from("testimonials").select("audio_path").eq("id", id).maybeSingle();
+  const { error } = await supabase.from("testimonials").delete().eq("id", id);
+  if (!error) await removeAudio([doomed?.audio_path ?? null]);
   revalidatePath("/dashboard/space/[id]", "page");
 }

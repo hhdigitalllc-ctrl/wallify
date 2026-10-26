@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CopyField } from "@/components/copy-field";
 import { SubmitButton } from "@/components/submit-button";
+import { VoicePlayer } from "@/components/voice-player";
+import { signAudioUrls } from "@/lib/audio";
 import { FREE_LIMITS, siteUrl } from "@/lib/billing";
 import { href } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -35,11 +37,13 @@ export default async function SpacePage({
 
   const { data: testimonials } = await supabase
     .from("testimonials")
-    .select("id, rating, content, client_name, client_title, approved, created_at")
+    .select("id, rating, content, client_name, client_title, approved, created_at, audio_path, audio_seconds")
     .eq("space_id", id)
     .order("created_at", { ascending: false });
 
   const list = testimonials ?? [];
+  const audioUrls = await signAudioUrls(list.map((x) => x.audio_path));
+  const voice = getDictionary(locale).collect.voice;
   const approved = list.filter((t) => t.approved).length;
   const pending = list.length - approved;
   const avg = list.length ? list.reduce((n, t) => n + t.rating, 0) / list.length : 0;
@@ -156,7 +160,10 @@ export default async function SpacePage({
                 {x.approved ? t.live : t.pending}
               </span>
             </div>
-            <p className="mt-3 text-[15px] leading-relaxed">{x.content}</p>
+            {x.content && <p className="mt-3 text-[15px] leading-relaxed">{x.content}</p>}
+            {x.audio_path && audioUrls.get(x.audio_path) && (
+              <VoicePlayer src={audioUrls.get(x.audio_path)!} seconds={x.audio_seconds ?? 0} play={voice.play} pause={voice.pause} />
+            )}
             <p className="mt-3 text-sm text-muted">
               <span className="font-medium text-foreground">{x.client_name}</span>
               {x.client_title ? `, ${x.client_title}` : ""}

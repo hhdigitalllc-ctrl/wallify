@@ -137,7 +137,7 @@ export const legalEn: LegalSet = {
       {
         h: "Testimonials are public once approved",
         p: [
-          "If you leave a testimonial, your name, optional title and your words may be shown publicly on the website of the space owner and on their Wallify wall page, but only after the space owner approves them. To have a testimonial removed, ask the space owner, or email us and we will help.",
+          "If you leave a testimonial, your name, optional title, your words and, if you record one, your voice message may be shown publicly on the website of the space owner and on their Wallify wall page, but only after the space owner approves them. To have a testimonial removed, ask the space owner, or email us and we will help.",
         ],
       },
       {

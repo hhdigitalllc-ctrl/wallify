@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { VoiceRecorder } from "@/components/voice-recorder";
 import { submitTestimonial } from "@/app/[locale]/collect/[slug]/actions";
 import Link from "next/link";
 import { href, type Locale } from "@/i18n/config";
@@ -13,6 +14,7 @@ export function CollectForm({ spaceId, locale }: { spaceId: string; locale: Loca
   const [state, formAction, pending] = useActionState(submitTestimonial, undefined);
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
+  const [hasAudio, setHasAudio] = useState(false);
 
   if (state?.done) {
     return (
@@ -65,11 +67,13 @@ export function CollectForm({ spaceId, locale }: { spaceId: string; locale: Loca
         </div>
       </div>
 
+      <VoiceRecorder labels={t.voice} onChange={setHasAudio} />
+
       <textarea
         name="content"
-        rows={5}
+        rows={hasAudio ? 3 : 5}
         maxLength={1000}
-        required
+        required={!hasAudio}
         placeholder={t.placeholderContent}
         className="input resize-none"
       />

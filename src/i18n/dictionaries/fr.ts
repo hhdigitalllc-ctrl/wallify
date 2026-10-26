@@ -81,6 +81,7 @@ export const fr: Dictionary = {
     sub: "Wallify fait une chose et la fait bien : obtenir de vrais témoignages et les mettre en valeur.",
     live: [
       { h: "Un lien que vos clients utiliseront vraiment", p: "Une page claire et sans distraction avec une note en étoiles et une zone de texte. Pas de compte, pas de friction." },
+      { h: "Témoignages vocaux", p: "Vos clients qui n'aiment pas écrire peuvent simplement parler. Jusqu'à 60 secondes, vous validez, et les visiteurs écoutent directement sur votre mur." },
       { h: "Validation avant publication", p: "Chaque avis arrive en attente. Vous décidez de ce qui apparaît sur votre mur, et vous pouvez changer d'avis." },
       { h: "Intégration en une ligne", p: "Collez une seule balise script dans Framer, Webflow, WordPress ou du HTML simple. Le mur se redimensionne tout seul." },
       { h: "Une page publique", p: "Chaque espace a sa propre page de mur d'avis à partager. Mettez le lien dans un tweet, un e-mail ou votre pied de page." },
@@ -235,6 +236,17 @@ export const fr: Dictionary = {
     checkInbox: "Consultez votre boîte mail pour confirmer votre adresse, puis connectez-vous.",
   },
   collect: {
+    voice: {
+      record: "Enregistrer ma voix",
+      recording: "Enregistrement",
+      stop: "Arrêter",
+      remove: "Supprimer",
+      denied: "L'accès au micro est bloqué. Autorisez-le dans votre navigateur, ou écrivez simplement votre témoignage.",
+      hint: "Jusqu'à 60 secondes. Ou écrivez simplement ci-dessous.",
+      play: "Écouter le témoignage vocal",
+      pause: "Pause",
+    },
+    errAudio: "Impossible d'utiliser l'enregistrement, réessayez ou écrivez votre témoignage.",
     thanks: "Merci !",
     thanksP: "Vos mots comptent beaucoup. Ils apparaîtront une fois validés.",
     ratingLabels: ["Mauvais", "Moyen", "Bien", "Très bien", "J'adore !"],
@@ -245,7 +257,7 @@ export const fr: Dictionary = {
     sending: "Envoi…",
     send: "Envoyer mon témoignage",
     poweredBy: "Propulsé par Wallify",
-    consent: "En envoyant ce formulaire, vous acceptez que votre nom et votre témoignage soient affichés publiquement une fois validés. Voir notre",
+    consent: "En envoyant ce formulaire, vous acceptez que votre nom et votre témoignage soient affichés publiquement une fois validés (y compris votre voix, si vous en enregistrez une). Voir notre",
     errReload: "Un problème est survenu, rechargez la page.",
     errRating: "Choisissez une note en étoiles.",
     errContent: "Écrivez votre témoignage (1000 caractères max).",
@@ -297,6 +309,7 @@ export const fr: Dictionary = {
       errGeneric: "Impossible de créer l'espace, veuillez réessayer.",
     },
     space: {
+      voiceBadge: "Vocal",
       back: "← Aperçu",
       collectStep: "1 · Collecter",
       showStep: "2 · Afficher",

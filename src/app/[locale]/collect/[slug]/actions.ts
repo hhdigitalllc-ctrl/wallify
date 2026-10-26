@@ -2,7 +2,10 @@
 
 import { createHmac } from "node:crypto";
 import { headers } from "next/headers";
+import { randomUUID } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { VOICE_BUCKET, detectAudioFormat, removeAudio } from "@/lib/audio";
+import { VOICE_MAX_BYTES, VOICE_MAX_SECONDS } from "@/lib/voice";
 import { defaultLocale, isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 
@@ -39,7 +42,14 @@ export async function submitTestimonial(
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
     return { error: t.errRating };
   }
-  if (!content || content.length > 1000) {
+  const audio = formData.get("audio");
+  const audioFile = audio instanceof File && audio.size > 0 ? audio : null;
+  const audioSeconds = Number(formData.get("audio_seconds"));
+  if (audioFile && (audioFile.size > VOICE_MAX_BYTES || !Number.isInteger(audioSeconds) || audioSeconds < 1 || audioSeconds > VOICE_MAX_SECONDS + 1)) {
+    return { error: t.errAudio };
+  }
+  // A voice recording can stand in for the written words
+  if ((!content && !audioFile) || content.length > 1000) {
     return { error: t.errContent };
   }
   if (!clientName || clientName.length > 80) {
@@ -66,14 +76,32 @@ export async function submitTestimonial(
   await admin.from("submission_log").insert({ ip_hash: key, space_id: spaceId });
   await admin.from("submission_log").delete().lt("created_at", since(2 * 24 * 60 * MINUTE));
 
+  // Store the recording first; it is removed again if the testimonial can't be saved
+  let audioPath: string | null = null;
+  if (audioFile) {
+    const bytes = new Uint8Array(await audioFile.arrayBuffer());
+    const format = detectAudioFormat(bytes);
+    if (!format) return { error: t.errAudio };
+    audioPath = `${spaceId}/${randomUUID()}.${format.ext}`;
+    const { error: uploadError } = await admin.storage
+      .from(VOICE_BUCKET)
+      .upload(audioPath, bytes, { contentType: format.type, upsert: false });
+    if (uploadError) return { error: t.errAudio };
+  }
+
   const { error } = await admin.from("testimonials").insert({
     space_id: spaceId,
     rating,
     content,
     client_name: clientName,
     client_title: clientTitle || null,
+    audio_path: audioPath,
+    audio_seconds: audioPath ? Math.min(audioSeconds, VOICE_MAX_SECONDS) : null,
   });
 
-  if (error) return { error: t.errSubmit };
+  if (error) {
+    await removeAudio([audioPath]);
+    return { error: t.errSubmit };
+  }
   return { done: true };
 }

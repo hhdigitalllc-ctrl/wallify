@@ -80,6 +80,7 @@ export const en = {
     sub: "Wallify does one job well: get real testimonials and show them beautifully.",
     live: [
       { h: "A link your customers will actually use", p: "A clean, distraction-free page with a star rating and a text box. No account, no friction." },
+      { h: "Voice testimonials", p: "Customers who hate typing can just talk. Record up to 60 seconds, you approve it, and visitors press play right on your wall." },
       { h: "Approve before it's public", p: "Every submission starts pending. You decide what goes on your wall, and you can change your mind." },
       { h: "One-line embed", p: "Paste a single script tag into Framer, Webflow, WordPress or plain HTML. The wall resizes itself." },
       { h: "A public wall page", p: "Every space gets its own shareable Wall of Love page. Link to it from a tweet, email or footer." },
@@ -234,6 +235,17 @@ export const en = {
     checkInbox: "Check your inbox to confirm your email, then log in.",
   },
   collect: {
+    voice: {
+      record: "Record your voice",
+      recording: "Recording",
+      stop: "Stop",
+      remove: "Remove",
+      denied: "Microphone access was blocked. Allow it in your browser, or just type your testimonial.",
+      hint: "Up to 60 seconds. Or just type below.",
+      play: "Play voice testimonial",
+      pause: "Pause",
+    },
+    errAudio: "Could not use the recording, please try again or type your testimonial.",
     thanks: "Thank you!",
     thanksP: "Your words mean a lot. They'll show up once they've been approved.",
     ratingLabels: ["Poor", "Fair", "Good", "Great", "Loved it!"],
@@ -244,7 +256,7 @@ export const en = {
     sending: "Sending…",
     send: "Send testimonial",
     poweredBy: "Powered by Wallify",
-    consent: "By sending this, you agree that your name and testimonial may be shown publicly once approved. See our",
+    consent: "By sending this, you agree that your name and testimonial may be shown publicly once approved (including your voice, if you record one). See our",
     errReload: "Something went wrong, reload the page.",
     errRating: "Pick a star rating.",
     errContent: "Write your testimonial (1000 characters max).",
@@ -296,6 +308,7 @@ export const en = {
       errGeneric: "Could not create the space, please try again.",
     },
     space: {
+      voiceBadge: "Voice",
       back: "← Overview",
       collectStep: "1 · Collect",
       showStep: "2 · Show",

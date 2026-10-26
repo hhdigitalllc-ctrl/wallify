@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { HeightReporter } from "@/components/height-reporter";
+import { VoicePlayer } from "@/components/voice-player";
+import { signAudioUrls } from "@/lib/audio";
 import { FREE_LIMITS, siteUrl } from "@/lib/billing";
 import { defaultLocale, dirOf, isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -29,12 +31,15 @@ export default async function WidgetPage({
   const { data: isPro } = await supabase.rpc("space_is_pro", { space: spaceId });
   const { data: all } = await supabase
     .from("testimonials")
-    .select("id, rating, content, client_name, client_title")
+    .select("id, rating, content, client_name, client_title, audio_path, audio_seconds")
     .eq("space_id", spaceId)
     .eq("approved", true)
     .order("created_at", { ascending: false });
   // Free plan caps the public wall (covers owners who downgraded with many approved).
   const testimonials = isPro ? all : all?.slice(0, FREE_LIMITS.approvedTestimonials);
+
+  const audioUrls = await signAudioUrls((testimonials ?? []).map((x) => x.audio_path));
+  const voice = getDictionary(locale).collect.voice;
 
   const cardClass = dark
     ? "border-white/10 bg-white/5 text-white"
@@ -51,7 +56,10 @@ export default async function WidgetPage({
         {testimonials?.map((x) => (
           <figure key={x.id} className={`mb-4 break-inside-avoid rounded-2xl border p-5 ${cardClass}`}>
             <Stars rating={x.rating} label={t.stars(x.rating)} />
-            <blockquote className="mt-2 text-[15px] leading-relaxed">{x.content}</blockquote>
+            {x.content && <blockquote className="mt-2 text-[15px] leading-relaxed">{x.content}</blockquote>}
+            {x.audio_path && audioUrls.get(x.audio_path) && (
+              <VoicePlayer src={audioUrls.get(x.audio_path)!} seconds={x.audio_seconds ?? 0} play={voice.play} pause={voice.pause} dark={dark} />
+            )}
             <figcaption className="mt-4 flex items-center gap-3">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#111111] text-sm font-semibold text-white">
                 {x.client_name.charAt(0).toUpperCase()}

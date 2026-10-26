@@ -137,7 +137,7 @@ export const legalFr: LegalSet = {
       {
         h: "Les témoignages sont publics une fois validés",
         p: [
-          "Si vous laissez un témoignage, votre nom, votre poste éventuel et vos propos peuvent être affichés publiquement sur le site du propriétaire de l'espace et sur sa page de mur Wallify, mais uniquement après validation par le propriétaire. Pour faire retirer un témoignage, adressez-vous au propriétaire de l'espace ou écrivez-nous et nous vous aiderons.",
+          "Si vous laissez un témoignage, votre nom, votre poste éventuel, vos propos et, si vous en enregistrez un, votre message vocal peuvent être affichés publiquement sur le site du propriétaire de l'espace et sur sa page de mur Wallify, mais uniquement après validation par le propriétaire. Pour faire retirer un témoignage, adressez-vous au propriétaire de l'espace ou écrivez-nous et nous vous aiderons.",
         ],
       },
       {
