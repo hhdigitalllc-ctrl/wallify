@@ -38,6 +38,7 @@ export async function login(_: AuthState, formData: FormData): Promise<AuthState
 
 export async function signup(_: AuthState, formData: FormData): Promise<AuthState> {
   const { email, password } = readCredentials(formData);
+  const locale = String(formData.get("locale") ?? "");
   const t = (await readLocale(formData)).auth;
   if (!email || password.length < 8) {
     return { error: t.errPassword };
@@ -48,6 +49,8 @@ export async function signup(_: AuthState, formData: FormData): Promise<AuthStat
     email,
     password,
     options: {
+      // Picks the language of the confirmation email
+      data: { locale: isLocale(locale) ? locale : defaultLocale },
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/callback`,
     },
   });

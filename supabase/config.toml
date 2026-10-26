@@ -1,0 +1,8 @@
+project_id = "iqxkriwducejklmelpql"
+
+[auth]
+site_url = "https://wallify-zeta.vercel.app"
+
+[auth.email.template.confirmation]
+subject = "Confirm your Wallify account"
+content_path = "./supabase/templates/confirmation.html"
